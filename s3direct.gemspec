@@ -5,11 +5,11 @@ require 's3direct/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "s3direct"
-  spec.version       = S3direct::VERSION
+  spec.version       = S3Direct::VERSION
   spec.authors       = ["Brent Dillingham"]
   spec.email         = ["brentdillingham@gmail.com"]
-  spec.description   = %q{Upload directly to S3}
   spec.summary       = %q{Upload directly to S3}
+  spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
 
