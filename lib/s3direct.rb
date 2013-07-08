@@ -1,4 +1,6 @@
 require "active_support/all"
+require "ejs"
+
 require "s3direct/version"
 require "s3direct/file"
 require "s3direct/string_interpolator"
