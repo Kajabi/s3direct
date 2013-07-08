@@ -4,7 +4,9 @@ module S3Direct
     attr_reader :model, :identifier, :pattern
 
     def self.sanitize_filename(name)
-      name.strip
+      unless name.nil?
+        name.strip
+      end
     end
 
     def initialize(model, identifier, pattern, opts={})
