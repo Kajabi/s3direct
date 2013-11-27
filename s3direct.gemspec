@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'activesupport', '>= 3.2.0'
-  spec.add_dependency 'coffee-rails', '~> 3.2.1'
   spec.add_dependency 'jquery-fileupload-rails', '~> 0.4.1'
+  spec.add_dependency 'coffee-rails'
   spec.add_dependency 'ejs'
 
   spec.add_development_dependency "bundler", "~> 1.3"
