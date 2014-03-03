@@ -1,10 +1,11 @@
 module S3Direct
   class UploadRequest
-    attr_reader :path, :filename
+    attr_reader :path, :filename, :options
 
-    def initialize(path, sanitized_filename)
+    def initialize(path, sanitized_filename, options = {})
       @path = path
       @filename = sanitized_filename
+      @options = options
     end
 
     def key
@@ -12,7 +13,7 @@ module S3Direct
     end
 
     def to_json
-      {
+      data = {
         url: config.bucket_url,
         filename: @filename,
         key: key,
@@ -21,7 +22,17 @@ module S3Direct
         acl: s3_acl,
         success_action_status: "200",
         'AWSAccessKeyId' => config.access_key
-      }.to_json
+      }
+
+      if attachment_filename
+        data["Content-Disposition"] = %Q{attachment; filename="#{attachment_filename}"}
+      end
+
+      data.to_json
+    end
+
+    def attachment_filename
+      options[:attachment_filename].presence
     end
 
     private
@@ -42,6 +53,11 @@ module S3Direct
           ['content-length-range', 0, config.max_upload_size]
         ]
       }
+
+      if attachment_filename
+        policy['conditions'] << {"Content-Disposition" => %Q{attachment; filename="#{attachment_filename}"}}
+      end
+
       encode(policy.to_json)
     end
 

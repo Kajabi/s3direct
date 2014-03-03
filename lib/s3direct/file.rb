@@ -33,12 +33,12 @@ module S3Direct
       end
     end
 
-    def upload_request(filename = name)
+    def upload_request(filename = name, options = {})
       if filename.blank?
         raise "Can't create an upload request without a filename - " +
           "provide it as an argument or set #{identifier}_file on the model"
       end
-      UploadRequest.new s3_path, self.class.sanitize_filename(filename)
+      UploadRequest.new s3_path, self.class.sanitize_filename(filename), options
     end
 
     def key
