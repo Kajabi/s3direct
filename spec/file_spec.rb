@@ -59,6 +59,13 @@ describe S3Direct::File, "#upload_request" do
     expect(file.upload_request('  foo').filename).to eql 'foo'
   end
 
+  it "optionally receives options to pass to the UploadRequest" do
+    model = double(:model)
+    file = S3Direct::File.new(model, :media, "foo/bar/bat")
+    S3Direct::UploadRequest.should_receive(:new).with(anything, "test.txt", {foo: 'bar'})
+    file.upload_request('test.txt', {foo: 'bar'})
+  end
+
   it "raises an error if the filename is not set or provided" do
     model = double(:model)
     file = S3Direct::File.new(model, :media, "foo/bar/bat")

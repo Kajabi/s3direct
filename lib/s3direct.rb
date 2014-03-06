@@ -28,6 +28,10 @@ module S3Direct
     end
   end
 
-  class Engine < Rails::Engine
+  begin
+    class Engine < Rails::Engine
+    end
+  rescue NameError => e
+    puts "Rails is not loaded => #{e.message}"
   end
 end
