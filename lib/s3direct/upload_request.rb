@@ -38,7 +38,7 @@ module S3Direct
     private
 
     def s3_acl
-      'public-read'
+      config.default_acl
     end
 
     # generate the policy document that amazon is expecting.
