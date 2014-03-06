@@ -55,3 +55,15 @@ describe S3Direct::UploadRequest, '#to_json' do
     end
   end
 end
+
+describe S3Direct::UploadRequest, '#s3_acl' do
+  it "uses the config default_acl by default" do
+    upload_request = S3Direct::UploadRequest.new('/foo/bar', 'buzz.txt')
+    expect(upload_request.s3_acl).to eq('public-read')
+  end
+
+  it "uses the acl option if available" do
+    upload_request = S3Direct::UploadRequest.new('/foo/bar', 'buzz.txt', acl: 'authenticated-read')
+    expect(upload_request.s3_acl).to eq('authenticated-read')
+  end
+end

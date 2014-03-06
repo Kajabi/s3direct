@@ -35,11 +35,11 @@ module S3Direct
       options[:attachment_filename].presence
     end
 
-    private
-
     def s3_acl
-      config.default_acl
+      options.fetch(:acl, config.default_acl)
     end
+
+    private
 
     # generate the policy document that amazon is expecting.
     def s3_upload_policy_document
