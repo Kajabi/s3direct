@@ -26,6 +26,11 @@ module S3Direct
     def max_upload_size
       @max_upload_size ||= 1.gigabyte
     end
+
+    attr_writer :default_acl
+    def default_acl
+      @default_acl ||= 'public-read'
+    end
   end
 
   begin
