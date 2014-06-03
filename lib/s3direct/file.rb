@@ -1,7 +1,7 @@
 module S3Direct
   class File
 
-    attr_reader :model, :identifier, :pattern
+    attr_reader :model, :identifier, :pattern, :options
 
     def self.sanitize_filename(name)
       unless name.nil?
@@ -14,7 +14,7 @@ module S3Direct
       @identifier = identifier
       @pattern = pattern
 
-      setup_options opts
+      @options = default_options.merge(opts)
     end
 
     def name
@@ -63,15 +63,10 @@ module S3Direct
       ::S3Direct.config
     end
 
-    def options
-      # set up any defaults here
-      @options ||= Hash.new.tap do |h|
+    def default_options
+      Hash.new.tap do |h|
         h[:max_upload_size] = max_upload_size if max_upload_size
       end
-    end
-
-    def setup_options(opts)
-      options.merge! opts
     end
 
     def default_url
