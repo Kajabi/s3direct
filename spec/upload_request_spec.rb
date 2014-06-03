@@ -14,6 +14,28 @@ describe S3Direct::UploadRequest, '#attachment_filename' do
   end
 end
 
+describe S3Direct::UploadRequest, 'the s3 upload policy' do
+  before do
+    S3Direct.config.stub(bucket_url: 'http://s3.com/mabucket/')
+    S3Direct.config.stub(secret_key: 'sekret')
+  end
+
+  def content_length_condition(upload_request)
+    policy = JSON[Base64.decode64(JSON[upload_request.to_json]['policy'])]
+    policy['conditions'].detect {|c| c.is_a?(Array) && c[0] == 'content-length-range'}
+  end
+
+  it 'defaults the max upload size to the config' do
+    upload_request = S3Direct::UploadRequest.new('/foo/bar', 'buzz.txt')
+    expect(content_length_condition(upload_request)).to eq(['content-length-range', 0, 1073741824])
+  end
+
+  it 'uses the max_upload_size instance option if provided' do
+    upload_request = S3Direct::UploadRequest.new('/foo/bar', 'buzz.txt', max_upload_size: 1024)
+    expect(content_length_condition(upload_request)).to eq(['content-length-range', 0, 1024])
+  end
+end
+
 describe S3Direct::UploadRequest, '#to_json' do
   before do
     S3Direct.config.stub(bucket_url: 'http://s3.com/mabucket/')
