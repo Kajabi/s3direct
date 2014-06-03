@@ -26,6 +26,18 @@ describe S3Direct::File do
     expect(file.url).to_not eql "http://example.com/default.png"
   end
 
+  it "returns a nil max_upload_size if the model does not provide it" do
+    model = double(:model, avatar_file: nil)
+    file = S3Direct::File.new(model, :avatar, "some/path")
+    expect(file.max_upload_size).to be_nil
+  end
+
+  it "returns a the max_upload_size from the model if it responds to a method like avatar_max_upload_size" do
+    model = double(:model, avatar_file: nil, avatar_max_upload_size: 123)
+    file = S3Direct::File.new(model, :avatar, "some/path")
+    expect(file.max_upload_size).to eq(123)
+  end
+
 end
 
 describe S3Direct::File, "#exists?" do
@@ -63,6 +75,13 @@ describe S3Direct::File, "#upload_request" do
     model = double(:model)
     file = S3Direct::File.new(model, :media, "foo/bar/bat")
     S3Direct::UploadRequest.should_receive(:new).with(anything, "test.txt", {foo: 'bar'})
+    file.upload_request('test.txt', {foo: 'bar'})
+  end
+
+  it "receives the max_upload_size option if the model provides it" do
+    model = double(:model, media_max_upload_size: 2048)
+    file = S3Direct::File.new(model, :media, "foo/bar/bat")
+    S3Direct::UploadRequest.should_receive(:new).with("foo/bar/bat", "test.txt", {max_upload_size: 2048, foo: 'bar'})
     file.upload_request('test.txt', {foo: 'bar'})
   end
 
