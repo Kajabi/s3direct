@@ -39,6 +39,10 @@ module S3Direct
       options.fetch(:acl, config.default_acl)
     end
 
+    def max_upload_size
+      options.fetch(:max_upload_size, config.max_upload_size)
+    end
+
     private
 
     # generate the policy document that amazon is expecting.
@@ -50,7 +54,7 @@ module S3Direct
           {'acl' => s3_acl},
           {'success_action_status' => '200'},
           {'key' => key},
-          ['content-length-range', 0, config.max_upload_size]
+          ['content-length-range', 0, max_upload_size]
         ]
       }
 
