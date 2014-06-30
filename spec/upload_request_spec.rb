@@ -28,11 +28,13 @@ describe S3Direct::UploadRequest, 'the s3 upload policy' do
   it 'defaults the max upload size to the config' do
     upload_request = S3Direct::UploadRequest.new('/foo/bar', 'buzz.txt')
     expect(content_length_condition(upload_request)).to eq(['content-length-range', 0, 1073741824])
+    expect(JSON[upload_request.to_json]['max_upload_size']).to eq(1073741824)
   end
 
   it 'uses the max_upload_size instance option if provided' do
     upload_request = S3Direct::UploadRequest.new('/foo/bar', 'buzz.txt', max_upload_size: 1024)
     expect(content_length_condition(upload_request)).to eq(['content-length-range', 0, 1024])
+    expect(JSON[upload_request.to_json]['max_upload_size']).to eq(1024)
   end
 end
 

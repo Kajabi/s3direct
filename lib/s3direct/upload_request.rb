@@ -21,6 +21,7 @@ module S3Direct
         signature: s3_upload_signature,
         acl: s3_acl,
         success_action_status: "200",
+        max_upload_size: max_upload_size,
         'AWSAccessKeyId' => config.access_key
       }
 
