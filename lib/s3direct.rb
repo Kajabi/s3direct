@@ -1,6 +1,7 @@
 require "active_support/all"
 
 require "s3direct/version"
+require "s3direct/content_type_detection"
 require "s3direct/file"
 require "s3direct/string_interpolator"
 require "s3direct/upload_request"

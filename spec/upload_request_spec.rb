@@ -14,6 +14,22 @@ describe S3Direct::UploadRequest, '#attachment_filename' do
   end
 end
 
+describe S3Direct::UploadRequest, 'content_type' do
+  it "will have a content_type of image/jpeg for image/jpeg" do
+    upload_request = S3Direct::UploadRequest.new('/foo/bar', 'image.jpg', {
+      filetype: 'image/jpeg'
+    })
+    expect(upload_request.content_type).to eq('image/jpeg')
+  end
+
+  it "will have a content_type of audio/mpeg for audio/mp3" do
+    upload_request = S3Direct::UploadRequest.new('/foo/bar', 'baz.mp3', {
+      filetype: 'audio/mp3'
+    })
+    expect(upload_request.content_type).to eq('audio/mpeg')
+  end
+end
+
 describe S3Direct::UploadRequest, 'the s3 upload policy' do
   before do
     S3Direct.config.stub(bucket_url: 'http://s3.com/mabucket/')
@@ -76,6 +92,23 @@ describe S3Direct::UploadRequest, '#to_json' do
       policy = JSON[Base64.decode64 @data['policy']]
       condition =  policy['conditions'].detect {|c| c.is_a?(Hash) && c.keys.include?('Content-Disposition') }
       expect(condition['Content-Disposition']).to eq('attachment; filename="expected.txt"')
+    end
+  end
+
+  describe "the content_type" do
+    before do
+      upload_request = S3Direct::UploadRequest.new('/foo/bar', 'song.mp3')
+      @data = JSON[upload_request.to_json]
+    end
+
+    it "is included as Content-Type in the data" do
+      expect(@data["Content-Type"]).to eq('audio/mpeg')
+    end
+
+    it "is included n the policy" do
+      policy = JSON[Base64.decode64 @data['policy']]
+      condition =  policy['conditions'].detect {|c| c.is_a?(Hash) && c.keys.include?('Content-Type') }
+      expect(condition['Content-Type']).to eq('audio/mpeg')
     end
   end
 end

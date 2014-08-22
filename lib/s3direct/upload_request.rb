@@ -29,11 +29,23 @@ module S3Direct
         data["Content-Disposition"] = %Q{attachment; filename="#{attachment_filename}"}
       end
 
+      if content_type
+        data["Content-Type"] = content_type
+      end
+
       data.to_json
     end
 
     def attachment_filename
       options[:attachment_filename].presence
+    end
+
+    def filetype
+      options[:filetype].presence
+    end
+
+    def content_type
+      ContentTypeDetection.new(filename, filetype).lookup
     end
 
     def s3_acl
@@ -61,6 +73,10 @@ module S3Direct
 
       if attachment_filename
         policy['conditions'] << {"Content-Disposition" => %Q{attachment; filename="#{attachment_filename}"}}
+      end
+
+      if content_type
+        policy['conditions'] << {"Content-Type" => content_type}
       end
 
       encode(policy.to_json)

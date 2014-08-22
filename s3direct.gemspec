@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'jquery-fileupload-rails', '~> 0.4.1'
   spec.add_dependency 'coffee-rails'
   spec.add_dependency 'ejs'
+  spec.add_dependency 'mime-types'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rails", ">= 3.2.1"
