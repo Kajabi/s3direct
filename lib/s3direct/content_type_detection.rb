@@ -39,11 +39,11 @@ module S3Direct
     def lookup
       types = MIME::Types.type_for(filename)
 
-      if types.length == 1
-        type = types.first
+      type = if types.length == 1
+        types.first
       elsif types.length > 1
         media_type = filetype.split('/').first
-        type = types.detect {|t| t.media_type == media_type}
+        types.detect {|t| t.media_type == media_type}
       end
 
       (type || ContentTypeDetection::Default).content_type
