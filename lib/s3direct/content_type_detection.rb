@@ -9,22 +9,22 @@ module S3Direct
     end
 
     def lookup
-      type = if filetype.to_s.empty?
+      value = if filetype.to_s.empty?
         FilenameStrategy.new(filename).lookup
       else
         HybridStrategy.new(filename, filetype).lookup
       end
 
-      remap(type)
+      remap(value)
     end
 
-    def remap(type)
+    def remap(value)
       mappings = {
         "application/mp4" => "video/mp4",
         "audio/mp3" => "audio/mpeg"
       }
 
-      mappings.fetch(type, type)
+      mappings.fetch(value, value)
     end
   end
 
