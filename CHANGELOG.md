@@ -1,3 +1,7 @@
+### 0.4.1
+
+* fix deprecation warning for OpenSSL::Digest::Digest
+
 ### 0.4.0
 
 * enhancements
