@@ -85,7 +85,7 @@ module S3Direct
     # sign our request by Base64 encoding the policy document.
     def s3_upload_signature
       signature = OpenSSL::HMAC.digest(
-        OpenSSL::Digest::Digest.new('sha1'),
+        OpenSSL::Digest.new('sha1'),
         config.secret_key,
         s3_upload_policy_document
       )
